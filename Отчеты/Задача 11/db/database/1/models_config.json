@@ -1,0 +1,11 @@
+[
+    {
+        "name": "model1",
+        "size": 100,
+        "lastChange": 100,
+        "description": "kek",
+        "versions": [
+            "v1.0.0"
+        ]
+    }
+]
