@@ -8,8 +8,8 @@ class ModelConfig
 
   ModelConfig.fromJson(Map<String, dynamic> json)
     : name = json["name"] as String,
-      versions = List<String>.from(json["versions"] as Iterable<String>),
-      lastChange = json["lastChange"] as DateTime,
+      versions = List<String>.from(json["versions"] as List<dynamic>),
+      lastChange = DateTime.parse(json["lastChange"] as String),
       description = json["description"] as String,
       size = json["size"] as int;
   

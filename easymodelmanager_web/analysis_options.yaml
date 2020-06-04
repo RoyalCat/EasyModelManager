@@ -47,8 +47,6 @@ linter:
     omit_local_variable_types: false
     lines_longer_than_80_chars: false
     prefer_collection_literals: false
-    prefer_single_quotes: false
-    prefer_double_quotes: true
 # linter:
 #   rules:
 #     # Strong/weak typing

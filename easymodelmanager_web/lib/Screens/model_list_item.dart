@@ -1,6 +1,6 @@
 import 'package:easymodelmanager_web/Screens/model_details.dart';
-import "package:flutter/material.dart";
-import "package:shared_models/model_config.dart";
+import 'package:flutter/material.dart';
+import 'package:shared_models/model_config.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 class ModelListItem extends StatefulWidget
@@ -42,15 +42,15 @@ class _ModelListItemState extends State<ModelListItem>
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     Text(
-                      "latest version: ${widget.modelConfig.versions.last}",
+                      'latest version: ${widget.modelConfig.versions.last}',
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                     Text(
-                      "last update ${widget.modelConfig.lastChange}",
+                      'last update ${widget.modelConfig.lastChange}',
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                     RaisedButton(
-                      child: Text("Open more details"),
+                      child: Text('Open more details'),
                       onPressed: () {
                         Navigator.of(context).push(
                            MaterialPageRoute<ModelDetails>(
@@ -91,7 +91,7 @@ class _ModelListItemState extends State<ModelListItem>
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  Text("Description"),
+                  Text('Description'),
                   Expanded(
                     child: Text(widget.modelConfig.description),
                   )

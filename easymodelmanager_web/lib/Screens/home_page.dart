@@ -1,6 +1,10 @@
-import "model_list.dart";
-import "package:flutter/material.dart";
-import "package:theme_provider/theme_provider.dart";
+import 'package:easymodelmanager_web/Screens/auth_page.dart';
+import 'package:easymodelmanager_web/styles.dart';
+
+import 'model_list.dart';
+import 'package:flutter/material.dart';
+import 'package:theme_provider/theme_provider.dart';
+import 'package:shared_models/user_model.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -12,9 +16,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _darkTheme = false;
-  bool _loggined = true;
-  String _key = "";
+  UserModel _logginedUser;
 
+  void successfulLogin(UserModel userModel) {
+    setState(() {
+      _logginedUser = userModel;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,23 +34,17 @@ class _HomePageState extends State<HomePage> {
               flex: 1,
               child: Container(
                 height: 35,
-                child: TextField(
-                  textAlignVertical: TextAlignVertical.center,
-                  decoration: InputDecoration(
-                    icon: Icon(
-                      Icons.search,
-                      color: Colors.white,
-                    ),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
-                    disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
-                  ),
-                ),
+                child: _logginedUser == null
+                    ? Container()
+                    : TextField(
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.search,
+                            color: Colors.white,
+                          ),
+                        ).applyDefaults(whiteInputDecorationTheme),
+                      ),
               ),
             ),
             Expanded(
@@ -71,11 +73,13 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: Container(
-        child: _loggined
+        child: _logginedUser != null
             ? ModelsListScreen(
-              userKey: _key,
-            ) :
-            Container()
+                user: _logginedUser,
+              )
+            : AuthPage(
+                onSuccessfulLogin: successfulLogin,
+              ),
       ),
     );
   }

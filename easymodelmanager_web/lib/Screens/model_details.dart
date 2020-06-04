@@ -1,4 +1,4 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 import 'package:shared_models/model_config.dart';
 
 class ModelDetails extends StatefulWidget {
@@ -27,7 +27,7 @@ class _ModelDetailsState extends State<ModelDetails> {
         height: 50,
         child: Row(
           children: [
-            Text("Version: ${version}"),
+            Text('Version: ${version}'),
             Spacer(),
             RaisedButton(
               child: Icon(Icons.file_download),
@@ -58,11 +58,11 @@ class _ModelDetailsState extends State<ModelDetails> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Latest version: ${widget.modelConfig.versions.last}",
+                        'Latest version: ${widget.modelConfig.versions.last}',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       Text(
-                        "Last update: ${widget.modelConfig.lastChange}",
+                        'Last update: ${widget.modelConfig.lastChange}',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                     ],
@@ -76,7 +76,7 @@ class _ModelDetailsState extends State<ModelDetails> {
                           RaisedButton(
                             child: Row(
                               children: [
-                                Text("Download latest version"),
+                                Text('Download latest version'),
                                 SizedBox(width: 10),
                                 Icon(Icons.file_download),
                               ],
