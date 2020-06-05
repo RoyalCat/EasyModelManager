@@ -36,6 +36,7 @@ dependencies:
   shared_preferences_web: ^0.1.2+7
   validators: ^2.0.0
   provider: ^4.1.2
+  crypto: ^2.1.5
 
 dev_dependencies:
   flutter_test:

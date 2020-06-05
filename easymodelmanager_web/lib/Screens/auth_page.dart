@@ -1,15 +1,18 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:crypto/crypto.dart';
 
 import 'package:easymodelmanager_web/app_config.dart';
-import 'package:easymodelmanager_web/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_models/user_model.dart';
 import 'package:validators/validators.dart' as validators;
 import 'package:http/http.dart' as http;
 
+String generateMd5(String input) {
+  return md5.convert(utf8.encode(input)).toString();
+}
+
 class AuthPage extends StatefulWidget {
-  void Function(UserModel) onSuccessfulLogin;
+  final void Function(UserModel) onSuccessfulLogin;
 
   AuthPage({
     Key key,
@@ -52,7 +55,7 @@ class _AuthPageState extends State<AuthPage> {
       },
       body: jsonEncode({
         'name': _userParameters['login'],
-        'password': _userParameters['pass'],
+        'password': generateMd5(_userParameters['pass']),
       }),
     );
     if(response.statusCode == 200)
@@ -68,7 +71,7 @@ class _AuthPageState extends State<AuthPage> {
   Future _tryLogin() async {
     String basicAuth = 'Basic ' +
         base64Encode(utf8
-            .encode('${_userParameters['login']}:${_userParameters['pass']}'));
+            .encode('${_userParameters['login']}:${generateMd5(_userParameters['pass'])}'));
     final response = await http.get('${_config.apiUrl}/login', headers: {
       'authorization': basicAuth,
     },);
