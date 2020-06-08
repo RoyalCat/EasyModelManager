@@ -8,7 +8,7 @@ class ModelConfig
 
   ModelConfig.fromJson(Map<String, dynamic> json)
     : name = json["name"] as String,
-      versions = List<String>.from(json["versions"] as List<dynamic>),
+      versions = List<String>.from((json["versions"] as List<dynamic>) ?? []),
       lastChange = DateTime.parse(json["lastChange"] as String),
       description = json["description"] as String,
       size = json["size"] as int;
@@ -16,11 +16,13 @@ class ModelConfig
   Map<String, dynamic> toJson() =>
     {
       "name": name,
-      "versions": versions,
-      "lastChange": lastChange,
+      "versions": versions ?? [],
+      "lastChange": lastChange.toIso8601String(),
       "description": description,
       "size": size
     };
+
+  bool get isValid => (name != null && description != null && lastChange != null && size != null);
 }
 
 Map<String, ModelConfig> toMapByName(List<ModelConfig> configs)

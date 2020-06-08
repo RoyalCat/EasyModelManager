@@ -1,0 +1,113 @@
+@startuml modelmanager_web
+set namespaceSeparator ::
+
+class "easymodelmanager_web::app_config.dart::AppConfig" {
+  +String apiUrl
+  {static} +Future forEnvironment()
+}
+
+"easymodelmanager_web::main.dart::MyApp" --o "easymodelmanager_web::Screens::home_page.dart::HomePage"
+
+class "easymodelmanager_web::main.dart::MyApp" {
+  +Widget build()
+}
+
+"easymodelmanager_web::Screens::auth_page.dart::AuthPage" o-- "shared_models::user_model.dart::UserModel"
+
+
+class "easymodelmanager_web::Screens::auth_page.dart::AuthPage" {
+  +void Function(UserModel) onSuccessfulLogin
+  +State createState()
+}
+
+"easymodelmanager_web::Screens::auth_page.dart::_AuthPageState" o-- "easymodelmanager_web::Screens::home_page.dart::HomePage"
+
+
+class "easymodelmanager_web::Screens::auth_page.dart::_AuthPageState" {
+  -bool _loginAutoValidate
+  -bool _registerAutoValidate
+  -GlobalKey<FormState> _loginFormKey
+  -String _loginStausText
+  -GlobalKey<FormState> _registerFormKey
+  -String _registerStatusText
+  -AppConfig _config
+  -Map<String, String> _userParameters
+  +void initState()
+  -Future _tryRegisterLogin()
+  -Future _tryLogin()
+  +Widget build()
+}
+
+"easymodelmanager_web::Screens::auth_page.dart::_AuthPageState" o-- "easymodelmanager_web::app_config.dart::AppConfig"
+
+class "easymodelmanager_web::Screens::home_page.dart::HomePage" {
+  +String title
+  +_HomePageState createState()
+}
+
+class "easymodelmanager_web::Screens::home_page.dart::_HomePageState" {
+  -bool _darkTheme
+  -UserModel _logginedUser
+  +void initState()
+  +void successfulLogin()
+  +Widget build()
+}
+
+"easymodelmanager_web::Screens::home_page.dart::_HomePageState" o-- "shared_models::user_model.dart::UserModel"
+
+class "easymodelmanager_web::Screens::model_details.dart::ModelDetails" {
+  +ModelConfig modelConfig
+  +State createState()
+}
+
+"easymodelmanager_web::Screens::model_details.dart::ModelDetails" o-- "shared_models::model_config.dart::ModelConfig"
+"easymodelmanager_web::Screens::model_details.dart::_ModelDetailsState" o-- "easymodelmanager_web::app_config.dart::AppConfig"
+
+class "easymodelmanager_web::Screens::model_details.dart::_ModelDetailsState" {
+  -Widget _versionItem()
+  +Widget build()
+}
+
+
+class "easymodelmanager_web::Screens::model_list.dart::ModelsListScreen" {
+  +UserModel user
+  +_ModelsListScreen createState()
+}
+
+"easymodelmanager_web::Screens::model_list.dart::ModelsListScreen" o-- "easymodelmanager_web::Screens::home_page.dart::HomePage"
+"easymodelmanager_web::Screens::model_list.dart::ModelsListScreen" o-- "easymodelmanager_web::app_config.dart::AppConfig"
+"easymodelmanager_web::Screens::model_list.dart::ModelsListScreen" o-- "easymodelmanager_web::Screens::model_list_item.dart::_ModelListItemState"
+
+class "easymodelmanager_web::Screens::model_list.dart::_ModelsListScreen" {
+  +List<ModelConfig> models
+  +Map<String, ModelConfig> modelsMap
+  +Future updateModelList()
+  +Future setSearchFilter()
+  +void initState()
+  +Widget build()
+}
+
+
+class "easymodelmanager_web::Screens::model_list_item.dart::ModelListItem" {
+  +ModelConfig modelConfig
+  +_ModelListItemState createState()
+}
+
+"easymodelmanager_web::Screens::model_list_item.dart::ModelListItem" o-- "shared_models::model_config.dart::ModelConfig"
+
+class "easymodelmanager_web::Screens::model_list_item.dart::_ModelListItemState" {
+  +Widget build()
+}
+
+
+class "easymodelmanager_web::Screens::uploadmodel.dart::UploadModelScreen" {
+  +_UploadModelScreen createState()
+}
+"easymodelmanager_web::Screens::uploadmodel.dart::_UploadModelScreenState" o-- "easymodelmanager_web::app_config.dart::AppConfig"
+
+class "easymodelmanager_web::Screens::uploadmodel.dart::_UploadModelScreenState" {
+  +Widget build()
+}
+
+
+@enduml

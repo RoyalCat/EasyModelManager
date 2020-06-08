@@ -1,7 +1,6 @@
-import 'package:easymodelmanager_web/Screens/auth_page.dart';
-import 'package:easymodelmanager_web/styles.dart';
-
-import 'model_list.dart';
+import '../styles.dart';
+import 'model_list.dart' deferred as models_page;
+import 'auth_page.dart' as auth_page;
 import 'package:flutter/material.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:shared_models/user_model.dart';
@@ -18,10 +17,17 @@ class _HomePageState extends State<HomePage> {
   bool _darkTheme = false;
   UserModel _logginedUser;
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   void successfulLogin(UserModel userModel) {
-    setState(() {
-      _logginedUser = userModel;
-    });
+    models_page.loadLibrary().then((value) => {
+          setState(() {
+            _logginedUser = userModel;
+          })
+        });
   }
 
   @override
@@ -74,10 +80,10 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Container(
         child: _logginedUser != null
-            ? ModelsListScreen(
+            ? models_page.ModelsListScreen(
                 user: _logginedUser,
               )
-            : AuthPage(
+            : auth_page.AuthPage(
                 onSuccessfulLogin: successfulLogin,
               ),
       ),

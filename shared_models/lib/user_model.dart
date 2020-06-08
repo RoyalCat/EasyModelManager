@@ -20,7 +20,7 @@ class UserModel
     {
       "id": id,
       "name": name,
-      "password": name,
+      "password": password,
       "userType": userType
     };
 }

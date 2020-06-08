@@ -1,0 +1,146 @@
+@startuml modelmanager_server
+set namespaceSeparator ::
+
+class "modelmanager_server::channel.dart::ModelManagerChannel" {
+  -Database _database
+  -Router _router
+  +void handle()
+}
+
+"modelmanager_server::channel.dart::ModelManagerChannel" o-- "modelmanager_server::database::database.dart::Database"
+"modelmanager_server::channel.dart::ModelManagerChannel" o-- "modelmanager_server::router.dart::Router"
+
+class "modelmanager_server::controllers::authorisation.dart::SignupController" {
+  +Database database
+  +Future post()
+  +Future get()
+}
+
+"modelmanager_server::controllers::authorisation.dart::SignupController" o-- "modelmanager_server::database::database.dart::Database"
+"modelmanager_server::controllers::controller.dart::Controller" <|-- "modelmanager_server::controllers::authorisation.dart::SignupController"
+
+class "modelmanager_server::controllers::authorisation.dart::LoginController" {
+  +Future get()
+  +Future post()
+}
+
+"modelmanager_server::controllers::controller.dart::Controller" <|-- "modelmanager_server::controllers::authorisation.dart::LoginController"
+
+abstract class "modelmanager_server::controllers::controller.dart::Controller" {
+  +Future get()
+  +Future post()
+}
+
+class "modelmanager_server::controllers::model_controllers.dart::ModelsListController" {
+  +Database database
+  +Future get()
+  +Future post()
+}
+
+"modelmanager_server::controllers::model_controllers.dart::ModelsListController" o-- "modelmanager_server::database::database.dart::Database"
+"modelmanager_server::controllers::controller.dart::Controller" <|-- "modelmanager_server::controllers::model_controllers.dart::ModelsListController"
+
+class "modelmanager_server::controllers::model_controllers.dart::AddNewModelController" {
+  +Database database
+  +Future post()
+  +Future get()
+}
+
+"modelmanager_server::controllers::model_controllers.dart::AddNewModelController" o-- "modelmanager_server::database::database.dart::Database"
+"modelmanager_server::controllers::controller.dart::Controller" <|-- "modelmanager_server::controllers::model_controllers.dart::AddNewModelController"
+
+class "modelmanager_server::controllers::model_upload.dart::ModelUploadController" {
+  +Database database
+  +Future post()
+  +Future get()
+}
+
+"modelmanager_server::controllers::model_upload.dart::ModelUploadController" o-- "modelmanager_server::database::database.dart::Database"
+"modelmanager_server::controllers::controller.dart::Controller" <|-- "modelmanager_server::controllers::model_upload.dart::ModelUploadController"
+
+class "modelmanager_server::controllers::restricted_controller.dart::RestrictedController" {
+  +Database database
+  +Future get()
+  +Future post()
+  +Future authorise()
+  -bool _isAuthorized()
+  -bool _isValidUsernameAndPassword()
+}
+
+"modelmanager_server::controllers::restricted_controller.dart::RestrictedController" o-- "modelmanager_server::database::database.dart::Database"
+"modelmanager_server::controllers::controller.dart::Controller" <|-- "modelmanager_server::controllers::restricted_controller.dart::RestrictedController"
+
+class "modelmanager_server::database::database.dart::Database" {
+  -Uuid _uuidGenerator
+  +Directory databaseDirectory
+  +UsersController usersController
+  +Map<String, ModelsDatabase> userDataDatabase
+  +void saveUsers()
+  +void saveUserData()
+  +void saveAllUsersData()
+  +Future addUser()
+  +Future addModel()
+  +Future addVersion()
+  +IOSink newVersionSink()
+  +UserModel queryName()
+  +ModelsDatabase getModelsByUser()
+}
+
+"modelmanager_server::database::database.dart::Database" o-- "uuid::uuid.dart::Uuid"
+"modelmanager_server::database::database.dart::Database" o-- "dart::io::Directory"
+"modelmanager_server::database::database.dart::Database" o-- "modelmanager_server::database::db_models::users_controller.dart::UsersController"
+
+class "modelmanager_server::database::db_models::model_config_controller.dart::ModelsConfigController" {
+  {static} -JsonCodec _jsonCodec
+  +Map<String, ModelConfig> configs
+  +File configFile
+  -void _readConfig()
+  -void _writeConfig()
+  +Future save()
+  +ModelConfig []()
+  +void []=()
+  +void add()
+  +List getConfigList()
+}
+
+"modelmanager_server::database::db_models::model_config_controller.dart::ModelsConfigController" o-- "dart::convert::JsonCodec"
+"modelmanager_server::database::db_models::model_config_controller.dart::ModelsConfigController" o-- "dart::io::File"
+
+class "modelmanager_server::database::db_models::users_controller.dart::UsersController" {
+  {static} -JsonCodec _jsonCodec
+  +Map<String, UserModel> nameUserMap
+  +File configFile
+  -void _readConfig()
+  -void _writeConfig()
+  +Future save()
+  +UserModel []()
+  +void []=()
+  +void add()
+  +List getUsersList()
+}
+
+"modelmanager_server::database::db_models::users_controller.dart::UsersController" o-- "dart::convert::JsonCodec"
+"modelmanager_server::database::db_models::users_controller.dart::UsersController" o-- "dart::io::File"
+
+class "modelmanager_server::database::models_database.dart::ModelsDatabase" {
+  +Directory modelsDirectory
+  {static} -ModelsConfigController _modelsConfig
+  +void save()
+  +Future addModel()
+  +Future addVersion()
+  +IOSink newVersionSink()
+  +List getModels()
+  +ModelConfig queryName()
+}
+
+"modelmanager_server::database::models_database.dart::ModelsDatabase" o-- "dart::io::Directory"
+"modelmanager_server::database::models_database.dart::ModelsDatabase" o-- "modelmanager_server::database::db_models::model_config_controller.dart::ModelsConfigController"
+
+class "modelmanager_server::router.dart::Router" {
+  +Map<Uri, List<Controller>> handlers
+  +void route()
+  +void handle()
+}
+
+
+@enduml
