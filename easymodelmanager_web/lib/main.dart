@@ -1,3 +1,4 @@
+import 'package:easymodelmanager_web/Screens/admin_page.dart';
 import 'package:easymodelmanager_web/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:theme_provider/theme_provider.dart';
@@ -16,11 +17,17 @@ class MyApp extends StatelessWidget {
       loadThemeOnInit: true,
       child: MaterialApp(
         title: 'ModelManager',
-        home: ThemeConsumer(
-          child: HomePage(
-            title: 'Easy Model Manager',
+        initialRoute: '/',
+        routes: {
+          '/admin': (context) => ThemeConsumer(
+            child: AdminPage()
           ),
-        ),
+          '/': (context) => ThemeConsumer(
+                child: HomePage(
+                  title: 'Easy Model Manager',
+                ),
+              ),
+        },
       ),
     );
   }

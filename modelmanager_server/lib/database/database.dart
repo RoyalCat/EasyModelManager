@@ -70,4 +70,14 @@ class Database {
   UserModel queryName(String name) => usersController[name];
   
   ModelsDatabase getModelsByUser(UserModel user) => userDataDatabase[user.id];
+
+  int getSummaryDataSize()
+  {
+    int summarySize = 0;
+    for (final userdata in userDataDatabase.values)
+    {
+      summarySize += userdata.size();
+    }
+    return summarySize;
+  }
 }

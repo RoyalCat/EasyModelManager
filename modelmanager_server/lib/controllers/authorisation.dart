@@ -41,6 +41,9 @@ class SignupController extends Controller {
 }
 
 class LoginController extends Controller {
+
+  LoginController();
+
   @override
   Future<bool> get(HttpRequest request) async
   {

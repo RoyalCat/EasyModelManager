@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _darkTheme = false;
+  bool _isDarkTheme = false;
   UserModel _logginedUser;
 
   @override
@@ -23,11 +23,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void successfulLogin(UserModel userModel) {
-    models_page.loadLibrary().then((value) => {
-          setState(() {
-            _logginedUser = userModel;
-          })
-        });
+    models_page.loadLibrary().then((value) {
+      setState(() {
+        _logginedUser = userModel;
+      });
+    });
   }
 
   @override
@@ -66,10 +66,11 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Spacer(),
                   Switch(
-                    value: _darkTheme,
+                    value: _isDarkTheme,
                     onChanged: (value) {
-                      _darkTheme = value;
-                      ThemeProvider.controllerOf(context).nextTheme();
+                      _isDarkTheme = value;
+                      ThemeProvider.controllerOf(context).setTheme(
+                          _isDarkTheme ? darkTheme.id : lightTheme.id);
                     },
                   ),
                 ],

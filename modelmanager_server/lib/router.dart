@@ -12,7 +12,9 @@ class Router {
   void handle(HttpRequest request) async {
     print(request.uri);
     try {
-      request.response.statusCode = 501;
+      request.response.headers.add("Access-Control-Allow-Origin", "*");
+      request.response.headers.add("Access-Control-Allow-Headers", "*");
+
       bool pass = true;
       for (final controller in handlers[request.uri]) {
         if (pass) {
@@ -22,6 +24,9 @@ class Router {
               break;
             case "POST":
               pass = await controller.post(request);
+              break;
+            case "OPTIONS":
+              request.response.statusCode = 200;
               break;
             default:
               throw UnimplementedError();
@@ -37,7 +42,6 @@ class Router {
     } finally {
       await request.response.close();
     }
-
     
   }
 }

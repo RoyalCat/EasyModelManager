@@ -53,4 +53,13 @@ class ModelsDatabase {
 
   List<ModelConfig> getModels() => _modelsConfig.getConfigList();
   ModelConfig queryName(String name) => _modelsConfig[name];
+  int size()
+  {
+    int summarySize = 0;
+    for(final model in _modelsConfig.configs.values)
+    {
+      summarySize += model.size;
+    }
+    return summarySize;
+  }
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'controllers/admin_controllers.dart';
 import 'controllers/authorisation.dart';
 import 'controllers/model_controllers.dart';
 import 'controllers/model_upload.dart';
@@ -13,7 +14,7 @@ class ModelManagerChannel {
 
   @override
   ModelManagerChannel() {
-    _router.route('/signup', [SignupController(_database)]);
+    _router.route('/signup', [SignupController(_database),]);
 
     _router.route('/login', [
       RestrictedController(_database),
@@ -33,6 +34,17 @@ class ModelManagerChannel {
     _router.route('/new_model', [
       RestrictedController(_database),
       AddNewModelController(_database),
+    ]);
+
+
+    _router.route('/admin/login', [
+      RestrictedController(_database, isAdminOnly: true),
+      LoginController(),
+    ]);
+
+    _router.route('/admin/get_statistic', [
+      RestrictedController(_database, isAdminOnly: true),
+      StatisticController(_database),
     ]);
   }
 

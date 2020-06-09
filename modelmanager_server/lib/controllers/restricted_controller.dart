@@ -9,7 +9,10 @@ import 'controller.dart';
 
 class RestrictedController extends Controller {
   final Database database;
-  RestrictedController(this.database);
+  final bool isAdminOnly;
+  RestrictedController(this.database, {
+    this.isAdminOnly = false
+  });
 
   @override
   Future<bool> get(HttpRequest request) {
@@ -49,7 +52,15 @@ class RestrictedController extends Controller {
 
     final UserModel foundUser = database.queryName(user.name);
 
-    // check for match
-    return foundUser != null && foundUser.password == user.password;
+    if(isAdminOnly && foundUser.userType == 'admin')
+    {
+      return foundUser != null && foundUser.password == user.password;
+    }
+    else
+    {
+      return foundUser != null && foundUser.password == user.password;
+    }
+
+    
   }
 }
