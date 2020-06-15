@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-abstract class Controller
+class Controller
 {
-  Future<bool> get (HttpRequest request);
-  Future<bool> post(HttpRequest request);
+  Future<bool> get (HttpRequest request) async => throw UnimplementedError();
+
+  Future<bool> post(HttpRequest request) async => throw UnimplementedError();
 }

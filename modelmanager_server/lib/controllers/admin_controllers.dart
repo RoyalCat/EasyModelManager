@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:convert';
-import '../database/database.dart';
+import 'dart:io';
 
+import '../database/database.dart';
 import 'controller.dart';
 
 class StatisticController extends Controller

@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:modelmanager_server/controllers/admin_users_container.dart';
+
 import 'controllers/admin_controllers.dart';
 import 'controllers/authorisation.dart';
 import 'controllers/model_controllers.dart';
@@ -45,6 +47,21 @@ class ModelManagerChannel {
     _router.route('/admin/get_statistic', [
       RestrictedController(_database, isAdminOnly: true),
       StatisticController(_database),
+    ]);
+
+    _router.route('/admin/get_users', [
+      RestrictedController(_database, isAdminOnly: true),
+      UserListController(_database),
+    ]);
+
+    _router.route('/admin/get_user_data', [
+      RestrictedController(_database, isAdminOnly: true),
+      UserDataController(_database),
+    ]);
+
+    _router.route('/admin/delete_user', [
+      RestrictedController(_database, isAdminOnly: true),
+      UserDeleteController(_database),
     ]);
   }
 

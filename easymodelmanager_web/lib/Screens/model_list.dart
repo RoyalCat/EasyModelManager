@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:easymodelmanager_web/Screens/model_list_item.dart';
+import 'package:easymodelmanager_web/helpers/api_handler.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_models/model_config.dart';
 import 'package:shared_models/user_model.dart';
 
@@ -23,12 +25,15 @@ class _ModelsListScreen extends State<ModelsListScreen> {
   List<ModelConfig> models = List<ModelConfig>();
   Map<String, ModelConfig> modelsMap = Map<String, ModelConfig>();
 
+  ApiHandler api;
+
   Future updateModelList(String key) async {
+    api = Provider.of<ApiHandler>(context);
     List<ModelConfig> _models = List<ModelConfig>();
     _models.add(ModelConfig.fromJson({
       'name': 'Model1',
       'versions': ['0.0.1', '0.0.2', '0.0.3'],
-      'lastChange': DateTime.now(),
+      'lastChange': DateTime.now().toString(),
       'description': '',
       'size': 100
     }));

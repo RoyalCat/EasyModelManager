@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:io';
+
 
 import "package:meta/meta.dart";
 import 'package:shared_models/model_config.dart';
@@ -14,7 +16,7 @@ class Database {
 
   Directory databaseDirectory;
   UsersController usersController;
-  Map<String, ModelsDatabase> userDataDatabase = Map<String, ModelsDatabase>();
+  HashMap<String, ModelsDatabase> userDataDatabase = HashMap<String, ModelsDatabase>();
 
   Database({
     @required this.databaseDirectory,
@@ -26,12 +28,12 @@ class Database {
       folderPath: databaseDirectory,
     );
 
-    for (final user in usersController.nameUserMap.values) {
+    for (final user in usersController.users) {
       final models = ModelsDatabase(
         modelsDirectory: Directory("${databaseDirectory.path}/${user.id}"),
       );
 
-      userDataDatabase[user.id.toString()] = models;
+      userDataDatabase[user.id] = models;
     }
   }
 
@@ -43,7 +45,7 @@ class Database {
     user.id ??= _uuidGenerator.v4();
     user.userType ??= "user";
     usersController.add(user);
-    userDataDatabase[user.id.toString()] = ModelsDatabase(
+    userDataDatabase[user.id] = ModelsDatabase(
       modelsDirectory: Directory("${databaseDirectory.path}/${user.id}"),
     );
     saveUsers();
@@ -67,7 +69,16 @@ class Database {
     return userDataDatabase[user.id].newVersionSink(modelConfig, version);
   }
 
-  UserModel queryName(String name) => usersController[name];
+  UserModel queryName(String name) {
+    for (var user in usersController.users)
+    {
+      if(user.name == name)
+      {
+        return user;
+      }
+    }
+    return null;
+  }
   
   ModelsDatabase getModelsByUser(UserModel user) => userDataDatabase[user.id];
 
@@ -76,8 +87,16 @@ class Database {
     int summarySize = 0;
     for (final userdata in userDataDatabase.values)
     {
-      summarySize += userdata.size();
+      summarySize += userdata.size;
     }
     return summarySize;
   }
+
+  void remove(String id)
+  {
+    userDataDatabase.remove(id);
+    usersController.remove(id);
+  }
+
+  List<UserModel> getAllUsers() => usersController.users.toList();
 }

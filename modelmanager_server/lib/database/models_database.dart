@@ -53,7 +53,18 @@ class ModelsDatabase {
 
   List<ModelConfig> getModels() => _modelsConfig.getConfigList();
   ModelConfig queryName(String name) => _modelsConfig[name];
-  int size()
+
+  bool remove(String name)
+  {
+    _modelsConfig.configs.remove(name);
+    final modelDir = Directory("${modelsDirectory.path}/${name}");
+    if(!modelDir.existsSync()) {
+      modelDir.delete(recursive: true);
+    }
+  }
+
+
+  int get size
   {
     int summarySize = 0;
     for(final model in _modelsConfig.configs.values)

@@ -52,15 +52,9 @@ class RestrictedController extends Controller {
 
     final UserModel foundUser = database.queryName(user.name);
 
-    if(isAdminOnly && foundUser.userType == 'admin')
-    {
-      return foundUser != null && foundUser.password == user.password;
-    }
-    else
-    {
-      return foundUser != null && foundUser.password == user.password;
-    }
-
-    
+    return _isAdmin(foundUser, user) || _isUser(foundUser, user);
   }
+
+  bool _isUser(UserModel foundUser, UserModel user) => foundUser?.password == user.password;
+  bool _isAdmin(UserModel foundUser, UserModel user) => foundUser?.userType == 'admin' && foundUser?.password == user.password;
 }

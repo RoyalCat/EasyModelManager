@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:easymodelmanager_web/app_config.dart';
-import 'package:easymodelmanager_web/helpers/auth_helpers.dart';
+import 'package:provider/provider.dart';
+import '../helpers/api_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_models/user_model.dart';
 import 'package:validators/validators.dart' as validators;
@@ -30,32 +31,23 @@ class _AuthPageState extends State<AuthPage> {
   final _registerFormKey = GlobalKey<FormState>();
   var _registerStatusText = '';
 
-  AppConfig _config;
-
-  @override
-  void initState() {
-    AppConfig.forEnvironment().then((value) => _config = value);
-    super.initState();
-  }
-
   final Map<String, String> _userParameters = {
     'email': null,
     'login': null,
     'pass': null,
   };
 
+  ApiHandler api;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Future _tryRegisterLogin() async {
-    var response = await http.post(
-      '${_config.apiUrl}/signup',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: jsonEncode({
-        'name': _userParameters['login'],
-        'password': generateMd5(_userParameters['pass']),
-      }),
-    );
-    if(response.statusCode == 200)
+    api = Provider.of<ApiHandler>(context, listen: false);
+    api.setUserParams(_userParameters['login'], _userParameters['pass']);
+    if(await api.signUp())
     {
       await _tryLogin();
     } else {
@@ -66,11 +58,11 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Future _tryLogin() async {
-    final response = await sendAuthorisedGet('/login',_userParameters, _config);
-    if (response.statusCode == 200) {
-      widget.onSuccessfulLogin(
-        UserModel(_userParameters['login'], _userParameters['pass']),
-      );
+    api = Provider.of<ApiHandler>(context, listen: false);
+    api.setUserParams(_userParameters['login'], _userParameters['pass']);
+    final user =  await api.login();
+    if (user != null) {
+      widget.onSuccessfulLogin(user);
     } else {
       setState(() {
         _loginStausText = 'Invalid Login/Password';
@@ -202,7 +194,7 @@ class _AuthPageState extends State<AuthPage> {
                           validator: (value) => validators.isAlphanumeric(value)
                               ? null
                               : 'Password can contains only letters and numbers',
-                          onSaved: (value) => _userParameters['pass'] = value,
+                          onSaved: (value) => api.userParameters['pass'] = value,
                           obscureText: true,
                           decoration: InputDecoration(
                             labelText: 'Password',
