@@ -13,9 +13,11 @@ class ModelsConfigController
   static const JsonCodec _jsonCodec = JsonCodec();
   Map<String, ModelConfig> configs = Map<String, ModelConfig>();
   File configFile;
+  final String id;
 
   ModelsConfigController({
     @required Directory folderPath,
+    @required this.id
   })
   {
     configFile = File("${folderPath.path}/models_config.json");
@@ -30,7 +32,7 @@ class ModelsConfigController
   void _readConfig()
   {
     final dynamic json = _jsonCodec.decode(configFile.readAsStringSync());
-    for(final confgJson in json)
+    for(final confgJson in  json)
     {
       final ModelConfig config = ModelConfig.fromJson(confgJson as Map<String, dynamic>);
       configs[config.name] = config;
@@ -63,6 +65,6 @@ class ModelsConfigController
 
   List<ModelConfig> getConfigList()
   {
-    return configs.values?.toList();
+    return configs.values.toList();
   }
 }

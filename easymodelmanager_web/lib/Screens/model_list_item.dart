@@ -42,13 +42,14 @@ class _ModelListItemState extends State<ModelListItem>
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     Text(
-                      'latest version: ${widget.modelConfig.versions.last}',
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                    Text(
                       'last update ${widget.modelConfig.lastChange}',
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
+                    Text(
+                      'latest version: ${widget.modelConfig.versions.isNotEmpty ? widget.modelConfig.versions.last : "No versions avalible"}',
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
+                    
                     RaisedButton(
                       child: Text('Open more details'),
                       onPressed: () {
@@ -70,7 +71,7 @@ class _ModelListItemState extends State<ModelListItem>
                   children: [
                     Spacer(),
                     RaisedButton(
-                      onPressed: () {},
+                      onPressed: widget.modelConfig.versions.isNotEmpty ? () {} : null,
                       child: Icon(
                         Icons.file_download,
                         size: 40,

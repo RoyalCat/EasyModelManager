@@ -10,6 +10,47 @@ class "modelmanager_server::channel.dart::ModelManagerChannel" {
 "modelmanager_server::channel.dart::ModelManagerChannel" o-- "modelmanager_server::database::database.dart::Database"
 "modelmanager_server::channel.dart::ModelManagerChannel" o-- "modelmanager_server::router.dart::Router"
 
+class "modelmanager_server::controllers::admin_controllers.dart::StatisticController" {
+  +Database database
+  +Future get()
+  +Future post()
+}
+
+"modelmanager_server::controllers::admin_controllers.dart::StatisticController" o-- "modelmanager_server::database::database.dart::Database"
+"modelmanager_server::controllers::controller.dart::Controller" <|-- "modelmanager_server::controllers::admin_controllers.dart::StatisticController"
+
+class "modelmanager_server::controllers::admin_users_container.dart::UserListController" {
+  +Database database
+  +Future get()
+}
+
+"modelmanager_server::controllers::admin_users_container.dart::UserListController" o-- "modelmanager_server::database::database.dart::Database"
+"modelmanager_server::controllers::controller.dart::Controller" <|-- "modelmanager_server::controllers::admin_users_container.dart::UserListController"
+
+class "modelmanager_server::controllers::admin_users_container.dart::UserDataController" {
+  +Database database
+  +Future get()
+}
+
+"modelmanager_server::controllers::admin_users_container.dart::UserDataController" o-- "modelmanager_server::database::database.dart::Database"
+"modelmanager_server::controllers::controller.dart::Controller" <|-- "modelmanager_server::controllers::admin_users_container.dart::UserDataController"
+
+class "modelmanager_server::controllers::admin_users_container.dart::UserDeleteController" {
+  +Database database
+  +Future post()
+}
+
+"modelmanager_server::controllers::admin_users_container.dart::UserDeleteController" o-- "modelmanager_server::database::database.dart::Database"
+"modelmanager_server::controllers::controller.dart::Controller" <|-- "modelmanager_server::controllers::admin_users_container.dart::UserDeleteController"
+
+class "modelmanager_server::controllers::admin_users_container.dart::UserModelDeleteController" {
+  +Database database
+  +Future post()
+}
+
+"modelmanager_server::controllers::admin_users_container.dart::UserModelDeleteController" o-- "modelmanager_server::database::database.dart::Database"
+"modelmanager_server::controllers::controller.dart::Controller" <|-- "modelmanager_server::controllers::admin_users_container.dart::UserModelDeleteController"
+
 class "modelmanager_server::controllers::authorisation.dart::SignupController" {
   +Database database
   +Future post()
@@ -26,7 +67,7 @@ class "modelmanager_server::controllers::authorisation.dart::LoginController" {
 
 "modelmanager_server::controllers::controller.dart::Controller" <|-- "modelmanager_server::controllers::authorisation.dart::LoginController"
 
-abstract class "modelmanager_server::controllers::controller.dart::Controller" {
+class "modelmanager_server::controllers::controller.dart::Controller" {
   +Future get()
   +Future post()
 }
@@ -60,11 +101,14 @@ class "modelmanager_server::controllers::model_upload.dart::ModelUploadControlle
 
 class "modelmanager_server::controllers::restricted_controller.dart::RestrictedController" {
   +Database database
+  +bool isAdminOnly
   +Future get()
   +Future post()
   +Future authorise()
   -bool _isAuthorized()
   -bool _isValidUsernameAndPassword()
+  -bool _isUser()
+  -bool _isAdmin()
 }
 
 "modelmanager_server::controllers::restricted_controller.dart::RestrictedController" o-- "modelmanager_server::database::database.dart::Database"
@@ -74,7 +118,7 @@ class "modelmanager_server::database::database.dart::Database" {
   -Uuid _uuidGenerator
   +Directory databaseDirectory
   +UsersController usersController
-  +Map<String, ModelsDatabase> userDataDatabase
+  +HashMap<String, ModelsDatabase> userDataDatabase
   +void saveUsers()
   +void saveUserData()
   +void saveAllUsersData()
@@ -84,16 +128,21 @@ class "modelmanager_server::database::database.dart::Database" {
   +IOSink newVersionSink()
   +UserModel queryName()
   +ModelsDatabase getModelsByUser()
+  +int getSummaryDataSize()
+  +void remove()
+  +List getAllUsers()
 }
 
 "modelmanager_server::database::database.dart::Database" o-- "uuid::uuid.dart::Uuid"
 "modelmanager_server::database::database.dart::Database" o-- "dart::io::Directory"
 "modelmanager_server::database::database.dart::Database" o-- "modelmanager_server::database::db_models::users_controller.dart::UsersController"
+"modelmanager_server::database::database.dart::Database" o-- "dart::collection::HashMap<String, ModelsDatabase>"
 
 class "modelmanager_server::database::db_models::model_config_controller.dart::ModelsConfigController" {
   {static} -JsonCodec _jsonCodec
   +Map<String, ModelConfig> configs
   +File configFile
+  +String id
   -void _readConfig()
   -void _writeConfig()
   +Future save()
@@ -108,29 +157,32 @@ class "modelmanager_server::database::db_models::model_config_controller.dart::M
 
 class "modelmanager_server::database::db_models::users_controller.dart::UsersController" {
   {static} -JsonCodec _jsonCodec
-  +Map<String, UserModel> nameUserMap
+  -HashMap<String, UserModel> _users
   +File configFile
+  +Iterable<UserModel> users
   -void _readConfig()
   -void _writeConfig()
   +Future save()
-  +UserModel []()
-  +void []=()
+  +bool remove()
   +void add()
-  +List getUsersList()
 }
 
 "modelmanager_server::database::db_models::users_controller.dart::UsersController" o-- "dart::convert::JsonCodec"
+"modelmanager_server::database::db_models::users_controller.dart::UsersController" o-- "dart::collection::HashMap<String, UserModel>"
 "modelmanager_server::database::db_models::users_controller.dart::UsersController" o-- "dart::io::File"
 
 class "modelmanager_server::database::models_database.dart::ModelsDatabase" {
   +Directory modelsDirectory
-  {static} -ModelsConfigController _modelsConfig
+  +String id
+  -ModelsConfigController _modelsConfig
+  +int size
   +void save()
   +Future addModel()
   +Future addVersion()
   +IOSink newVersionSink()
   +List getModels()
   +ModelConfig queryName()
+  +bool remove()
 }
 
 "modelmanager_server::database::models_database.dart::ModelsDatabase" o-- "dart::io::Directory"

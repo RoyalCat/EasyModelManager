@@ -10,8 +10,6 @@ import 'package:shared_models/user_model.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:validators/validators.dart' as validators;
 
-import '../app_config.dart';
-
 class AdminPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => AdminPageState();
@@ -133,8 +131,8 @@ class UserViewItem extends StatelessWidget {
 
   UserViewItem(this.user, this.onOpenDescription);
 
+  //TODO: Complete Admin Panel
   void _delete() {}
-  void _promoute() {}
 
   @override
   Widget build(BuildContext context) {

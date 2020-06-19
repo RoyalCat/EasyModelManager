@@ -24,8 +24,9 @@ class ModelsListController extends Controller
     final String decoded = utf8.decode(base64.decode(credentials));
     final UserModel user = database.queryName(decoded.split(':')[0]);
     final ModelsDatabase modelsDatabase = database.getModelsByUser(user);
+    final List<ModelConfig> models = modelsDatabase.getModels();
     request.response.statusCode = 200;
-    request.response.write(jsonEncode(modelsDatabase.getModels()));
+    request.response.write(jsonEncode(models));
     
     return false;
   }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:easymodelmanager_web/Screens/model_list_item.dart';
+import 'package:easymodelmanager_web/Screens/uploadmodel.dart';
 import 'package:easymodelmanager_web/helpers/api_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +10,7 @@ import 'package:shared_models/user_model.dart';
 
 //igonre_for_file: implicit_dynamic_map_literal
 
-class   ModelsListScreen extends StatefulWidget {
+class ModelsListScreen extends StatefulWidget {
   final UserModel user;
 
   ModelsListScreen({
@@ -27,23 +28,15 @@ class _ModelsListScreen extends State<ModelsListScreen> {
 
   ApiHandler api;
 
-  Future updateModelList(String key) async {
-    api = Provider.of<ApiHandler>(context);
-    List<ModelConfig> _models = List<ModelConfig>();
-    _models.add(ModelConfig.fromJson({
-      'name': 'Model1',
-      'versions': ['0.0.1', '0.0.2', '0.0.3'],
-      'lastChange': DateTime.now().toString(),
-      'description': '',
-      'size': 100
-    }));
+  Future<void> updateModelList() async {
+    List<ModelConfig> _models = await api.getModelsList();
     modelsMap = toMapByName(_models);
     setState(() {
       models = modelsMap.values.toList();
     });
   }
 
-  Future setSearchFilter(String filter) async {
+  Future<void> setSearchFilter(String filter) async {
     models.clear();
     setState(() {
       modelsMap.keys.where((element) {
@@ -58,7 +51,8 @@ class _ModelsListScreen extends State<ModelsListScreen> {
   void initState() {
     super.initState();
     Timer.run(() {
-      updateModelList('');
+      api = Provider.of<ApiHandler>(context, listen: false);
+      updateModelList();
     });
   }
 
@@ -67,10 +61,11 @@ class _ModelsListScreen extends State<ModelsListScreen> {
     return (models.isNotEmpty)
         ? Container(
             child: ListView.builder(
-              itemCount: models.length,
+              itemCount: models.length + 1,
               itemExtent: 150,
-              itemBuilder: (context, i) =>
-                  ModelListItem(modelConfig: models[i]),
+              itemBuilder: (context, i) => (i == 0)
+                  ? UploadModelScreen(onNewModel: updateModelList,)
+                  : ModelListItem(modelConfig: models[i - 1]),
             ),
           )
         : Center(

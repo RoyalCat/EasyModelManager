@@ -1,3 +1,4 @@
+import 'package:easymodelmanager_web/Screens/upload_version.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_models/model_config.dart';
 
@@ -58,7 +59,7 @@ class _ModelDetailsState extends State<ModelDetails> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Latest version: ${widget.modelConfig.versions.last}',
+                        'Latest version: ${widget.modelConfig.versions.isNotEmpty ? widget.modelConfig.versions.last : "No versions avalible"}',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       Text(
@@ -81,7 +82,7 @@ class _ModelDetailsState extends State<ModelDetails> {
                                 Icon(Icons.file_download),
                               ],
                             ),
-                            onPressed: () {},
+                            onPressed: widget.modelConfig.versions.isNotEmpty ? () {} : null,
                           ),
                         ],
                       ),
@@ -98,9 +99,9 @@ class _ModelDetailsState extends State<ModelDetails> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListView.builder(
-                  itemCount: widget.modelConfig.versions.length,
-                  itemExtent: 50,
-                  itemBuilder: (context, i) => _versionItem(widget.modelConfig.versions[i]),
+                  itemCount: widget.modelConfig.versions.length + 1,
+                  itemExtent: 60,
+                  itemBuilder: (context, i) => (i==0) ? UploadVersionScreen(modelName: widget.modelConfig.name,) : _versionItem(widget.modelConfig.versions[i])
                 ),
               ),
             ),

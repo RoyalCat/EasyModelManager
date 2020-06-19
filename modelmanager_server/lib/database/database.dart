@@ -29,11 +29,10 @@ class Database {
     );
 
     for (final user in usersController.users) {
-      final models = ModelsDatabase(
+      userDataDatabase[user.id] = ModelsDatabase(
+        id: user.id,
         modelsDirectory: Directory("${databaseDirectory.path}/${user.id}"),
       );
-
-      userDataDatabase[user.id] = models;
     }
   }
 
@@ -46,6 +45,7 @@ class Database {
     user.userType ??= "user";
     usersController.add(user);
     userDataDatabase[user.id] = ModelsDatabase(
+      id: user.id,
       modelsDirectory: Directory("${databaseDirectory.path}/${user.id}"),
     );
     saveUsers();

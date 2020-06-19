@@ -5,70 +5,65 @@ import 'package:shared_models/model_config.dart';
 
 import "./db_models/model_config_controller.dart";
 
-
 class ModelsDatabase {
   final Directory modelsDirectory;
-  static ModelsConfigController _modelsConfig;
+  final String id;
+  ModelsConfigController _modelsConfig;
 
   ModelsDatabase({
     @required this.modelsDirectory,
+    @required this.id,
   }) {
     if (!modelsDirectory.existsSync()) {
       modelsDirectory.createSync(recursive: true);
     }
-    _modelsConfig = ModelsConfigController(folderPath: modelsDirectory);
+    _modelsConfig = ModelsConfigController(
+      id: id,
+      folderPath: modelsDirectory,
+    );
   }
 
   void save() => _modelsConfig.save();
 
-  Future<void> addModel(ModelConfig config) async
-  {
+  Future<void> addModel(ModelConfig config) async {
     config.versions ??= List<String>();
     final modelDir = Directory("${modelsDirectory.path}/${config.name}");
-    if(!modelDir.existsSync()) {
+    if (!modelDir.existsSync()) {
       modelDir.createSync();
       _modelsConfig.add(config);
-    }
-    else
-    {
+    } else {
       throw 208;
     }
-    
   }
 
-  Future<void> addVersion(ModelConfig model, String version, Stream<List<int>> fileStream) async
-  {
+  Future<void> addVersion(
+      ModelConfig model, String version, Stream<List<int>> fileStream) async {
     final modelFile = File('${modelsDirectory.path}/${model.name}/$version');
-    if(!modelFile.existsSync())
-    {
+    if (!modelFile.existsSync()) {
       modelFile.createSync();
     }
     fileStream.listen(modelFile.writeAsBytesSync);
   }
 
-  IOSink newVersionSink(ModelConfig model, String version)
-  {
+  IOSink newVersionSink(ModelConfig model, String version) {
     return File("${modelsDirectory.path}/${model.name}/$version").openWrite();
   }
 
   List<ModelConfig> getModels() => _modelsConfig.getConfigList();
   ModelConfig queryName(String name) => _modelsConfig[name];
 
-  bool remove(String name)
-  {
+  bool remove(String name) {
     _modelsConfig.configs.remove(name);
     final modelDir = Directory("${modelsDirectory.path}/${name}");
-    if(!modelDir.existsSync()) {
+    if (!modelDir.existsSync()) {
       modelDir.delete(recursive: true);
     }
+    return true;
   }
 
-
-  int get size
-  {
+  int get size {
     int summarySize = 0;
-    for(final model in _modelsConfig.configs.values)
-    {
+    for (final model in _modelsConfig.configs.values) {
       summarySize += model.size;
     }
     return summarySize;

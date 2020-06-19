@@ -1,12 +1,8 @@
-import 'dart:convert';
-
-import 'package:easymodelmanager_web/app_config.dart';
 import 'package:provider/provider.dart';
 import '../helpers/api_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_models/user_model.dart';
 import 'package:validators/validators.dart' as validators;
-import 'package:http/http.dart' as http;
 
 
 class AuthPage extends StatefulWidget {
